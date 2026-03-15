@@ -129,25 +129,35 @@ func (s *ReportService) GenerateWeeklyForPeriod(userID uint, startStr, endStr st
 	}
 
 	// Build daily breakdown for the period
-	totalActive := int(habitCount)
 	var breakdown []DayBreakdown
 	for d := startDate; !d.After(endDate); d = d.AddDate(0, 0, 1) {
 		ds := d.Format("2006-01-02")
+		dayEnd := time.Date(d.Year(), d.Month(), d.Day(), 23, 59, 59, 0, d.Location())
+
+		// Only count habits that existed on this specific day
+		var dayHabits []models.Habit
+		s.DB.Where("user_id = ? AND is_active = ? AND created_at <= ?", userID, true, dayEnd).Find(&dayHabits)
+		dayTotal := len(dayHabits)
+
 		var cnt int64
-		if len(activeIDs) > 0 {
+		if dayTotal > 0 {
+			dayHabitIDs := make([]uint, len(dayHabits))
+			for i, h := range dayHabits {
+				dayHabitIDs[i] = h.ID
+			}
 			s.DB.Model(&models.HabitLog{}).
-				Where("user_id = ? AND date = ? AND is_done = ? AND habit_id IN ?", userID, ds, true, activeIDs).
+				Where("user_id = ? AND date = ? AND is_done = ? AND habit_id IN ?", userID, ds, true, dayHabitIDs).
 				Count(&cnt)
 		}
 		rate := 0.0
-		if totalActive > 0 {
-			rate = float64(cnt) / float64(totalActive) * 100
+		if dayTotal > 0 {
+			rate = float64(cnt) / float64(dayTotal) * 100
 		}
 		breakdown = append(breakdown, DayBreakdown{
 			Date:      ds,
 			DayName:   dayNamesID[d.Weekday()],
 			Completed: int(cnt),
-			Total:     totalActive,
+			Total:     dayTotal,
 			Rate:      rate,
 		})
 	}
