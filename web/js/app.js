@@ -973,7 +973,7 @@
           <p class="text-xs text-slate-500">Harian${h.notify_time ? ' • ' + h.notify_time : ''}</p>
         </td>
         <td class="px-6 py-5 hidden md:table-cell">
-          <div class="flex items-center gap-2">${Icons.flame(18, '#f97316')}<span class="text-sm font-medium">${h.streak?.longest_streak || 0} Hari</span></div>
+          <div class="flex items-center gap-2">${Icons.flame(18, '#f97316')}<span class="text-sm font-medium">${h.longest_streak || 0} Hari</span></div>
         </td>
         <td class="px-6 py-5 hidden sm:table-cell">
           <span class="px-2.5 py-1 rounded-full text-[11px] font-bold uppercase ${h.is_active ? 'bg-emerald-900/30 text-emerald-400' : 'bg-slate-800 text-slate-400'}">${h.is_active ? 'Aktif' : 'Tidak Aktif'}</span>

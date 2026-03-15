@@ -69,15 +69,15 @@ const API = {
     if (token) headers['Authorization'] = 'Bearer ' + token;
 
     const url = API._buildUrl(path);
+    const body = opts.body != null && typeof opts.body === 'object' ? JSON.stringify(opts.body) : opts.body;
 
     let res;
     try {
-      res = await fetch(url, { ...opts, headers, credentials: 'include' });
+      res = await fetch(url, { ...opts, body, headers, credentials: 'include' });
     } catch (err) {
       API._logNetworkError(path, url, err);
       throw API._networkError(path, url);
     }
-
 
     // Auto-refresh on 401
     if (res.status === 401) {
@@ -85,7 +85,7 @@ const API = {
       if (refreshed) {
         headers['Authorization'] = 'Bearer ' + API.getToken();
         try {
-          res = await fetch(url, { ...opts, headers, credentials: 'include' });
+          res = await fetch(url, { ...opts, body, headers, credentials: 'include' });
         } catch (err) {
           API._logNetworkError(path, url, err);
           throw API._networkError(path, url);
