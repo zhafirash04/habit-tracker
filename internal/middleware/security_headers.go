@@ -22,10 +22,10 @@ func SecurityHeadersMiddleware(cfg *config.Config) gin.HandlerFunc {
 			"frame-ancestors 'none'",
 			"object-src 'none'",
 			"img-src 'self' data:",
-			"style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+			"style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com https://cdn.tailwindcss.com",
 			"font-src 'self' https://fonts.gstatic.com",
-			"script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com",
-			"connect-src 'self'",
+			"script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com https://fonts.gstatic.com",
+			"connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cdn.tailwindcss.com",
 			"worker-src 'self'",
 		}, "; ")
 		c.Header("Content-Security-Policy", csp)
