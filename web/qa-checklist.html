@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QA Checklist — HabitFlow PWA</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f172a;--surface:#1e293b;--card:#334155;--border:#475569;--text:#f1f5f9;--muted:#94a3b8;--accent:#10b981;--accent2:#6366f1;--warn:#f59e0b;--danger:#ef4444;--radius:10px}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;padding:0 0 80px}
+header{background:linear-gradient(135deg,#065f46,#064e3b);padding:28px 20px 22px;text-align:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.4)}
+header h1{font-size:1.4rem;font-weight:700;letter-spacing:-.3px}
+header p{font-size:.82rem;color:#a7f3d0;margin-top:4px}
+.stats-bar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.stat{background:rgba(255,255,255,.1);border-radius:8px;padding:6px 14px;font-size:.78rem;font-weight:600;display:flex;align-items:center;gap:5px}
+.stat .n{font-size:1.05rem;color:#34d399}
+.progress-ring{width:100%;height:6px;background:#064e3b;border-radius:3px;margin-top:10px;overflow:hidden}
+.progress-ring .fill{height:100%;background:linear-gradient(90deg,#10b981,#34d399);border-radius:3px;transition:width .4s ease}
+nav.toc{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 20px;position:sticky;top:110px;z-index:90;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
+nav.toc a{display:inline-block;color:var(--muted);text-decoration:none;font-size:.78rem;padding:5px 12px;border-radius:20px;margin-right:4px;transition:all .2s}
+nav.toc a:hover,nav.toc a.active{color:var(--text);background:var(--card)}
+main{max-width:860px;margin:0 auto;padding:20px 16px}
+.section{margin-bottom:32px}
+.section-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.section-head h2{font-size:1.1rem;font-weight:700}
+.section-head .badge{font-size:.7rem;background:var(--accent);color:#fff;padding:2px 8px;border-radius:10px;font-weight:600}
+.section-head .badge.purple{background:var(--accent2)}
+.section-head .badge.yellow{background:var(--warn);color:#000}
+.section-head .badge.red{background:var(--danger)}
+.section-counter{font-size:.75rem;color:var(--muted);margin-left:auto;white-space:nowrap}
+.device-matrix{width:100%;border-collapse:collapse;margin-bottom:24px;font-size:.85rem}
+.device-matrix th,.device-matrix td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+.device-matrix th{color:var(--muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.5px}
+.device-matrix tr:hover td{background:rgba(255,255,255,.03)}
+.item{display:flex;align-items:flex-start;gap:12px;padding:10px 14px;border-radius:var(--radius);margin-bottom:4px;transition:background .15s;cursor:pointer;user-select:none;-webkit-user-select:none}
+.item:hover{background:rgba(255,255,255,.04)}
+.item.checked{opacity:.55}
+.item.checked .label{text-decoration:line-through;text-decoration-color:var(--muted)}
+.item input[type=checkbox]{appearance:none;-webkit-appearance:none;width:22px;height:22px;min-width:22px;border:2px solid var(--border);border-radius:6px;cursor:pointer;position:relative;margin-top:1px;transition:all .2s}
+.item input[type=checkbox]:checked{background:var(--accent);border-color:var(--accent)}
+.item input[type=checkbox]:checked::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px;font-weight:bold;color:#fff}
+.label{font-size:.88rem;flex:1}
+.label code{background:var(--card);padding:1px 5px;border-radius:4px;font-size:.8rem;color:#a5b4fc}
+.sub{display:block;font-size:.75rem;color:var(--muted);margin-top:2px}
+.actions{display:flex;gap:8px;margin:24px 0;flex-wrap:wrap}
+.btn{padding:8px 18px;border-radius:8px;border:none;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .15s}
+.btn:active{transform:scale(.97)}
+.btn-green{background:var(--accent);color:#fff}
+.btn-red{background:var(--danger);color:#fff}
+.btn-muted{background:var(--card);color:var(--muted)}
+.btn-muted:hover{color:var(--text)}
+footer{text-align:center;padding:30px 20px;color:var(--muted);font-size:.75rem}
+@media(max-width:600px){header{padding:20px 14px 16px}header h1{font-size:1.15rem}.stat{padding:4px 10px;font-size:.72rem}.item{padding:8px 10px;gap:10px}.label{font-size:.82rem}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧪 QA Manual Checklist — HabitFlow PWA</h1>
+  <p>Frontend Testing • Vanilla JS • Semua Device</p>
+  <div class="stats-bar">
+    <div class="stat">Total: <span class="n" id="totalCount">0</span></div>
+    <div class="stat">Selesai: <span class="n" id="doneCount">0</span></div>
+    <div class="stat">Sisa: <span class="n" id="remainCount">0</span></div>
+    <div class="stat">Progress: <span class="n" id="pct">0%</span></div>
+  </div>
+  <div class="progress-ring"><div class="fill" id="progressFill" style="width:0%"></div></div>
+</header>
+
+<nav class="toc" id="toc"></nav>
+
+<main id="main">
+
+<!-- Device Matrix -->
+<div class="section" id="sec-device">
+  <div class="section-head">
+    <h2>📱 Device Testing Matrix</h2>
+  </div>
+  <table class="device-matrix">
+    <thead><tr><th>Browser / Device</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Chrome Android (HP)</td><td>✅ WAJIB</td></tr>
+      <tr><td>Chrome Desktop</td><td>✅ WAJIB</td></tr>
+      <tr><td>Safari iOS (iPhone)</td><td>✅ WAJIB (untuk PWA install)</td></tr>
+      <tr><td>Firefox Desktop</td><td>⚡ Opsional</td></tr>
+      <tr><td>Edge Desktop</td><td>⚡ Opsional</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 1. Login/Register -->
+<div class="section" data-section="login" id="sec-login">
+  <div class="section-head">
+    <h2>🔐 Halaman Login / Register</h2>
+    <span class="badge">Auth</span>
+    <span class="section-counter"></span>
+  </div>
+  <label class="item"><input type="checkbox"><span class="label">Form login muncul dengan benar<span class="sub">Field email, password, tombol Login terlihat</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Bisa toggle ke mode register<span class="sub">Link "Belum punya akun? Daftar" berfungsi, form berganti</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Register dengan data valid → berhasil, redirect ke <code>/habits</code><span class="sub">Nama, email valid, password ≥ 8 karakter</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Register dengan email duplicate → tampil error message<span class="sub">Pesan: "Email sudah terdaftar" atau sejenisnya</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Register dengan password &lt; 8 karakter → tampil error message</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Login dengan credentials benar → berhasil, redirect ke <code>/habits</code></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Login dengan password salah → tampil error "Email atau password salah"</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Setelah login, refresh halaman → tetap login (token tersimpan)<span class="sub">Token di localStorage / sessionStorage</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Form tidak submit jika field kosong (HTML validation)<span class="sub">Atribut <code>required</code> aktif</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Loading indicator muncul saat proses login/register<span class="sub">Spinner atau disabled button saat request berlangsung</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Error message hilang saat user mulai mengetik ulang</span></label>
+</div>
+
+<!-- 2. Today -->
+<div class="section" data-section="today" id="sec-today">
+  <div class="section-head">
+    <h2>📋 Halaman Today (Halaman Utama)</h2>
+    <span class="badge">Core</span>
+    <span class="section-counter"></span>
+  </div>
+  <label class="item"><input type="checkbox"><span class="label">Semua habit muncul sebagai card</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Tanggal hari ini ditampilkan dengan benar<span class="sub">Format: "Kamis, 12 Maret 2026" atau sejenisnya</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Progress summary benar (contoh: "3/5 selesai")</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Streak per habit ditampilkan benar<span class="sub">Icon 🔥 + jumlah hari berturut-turut</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Tap tombol check-off → card berubah visual (warna hijau/centang)</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Animasi check-off berjalan smooth<span class="sub">Tidak lag, transisi terlihat proper</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Streak counter update langsung setelah check-off (tanpa reload)</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Progress summary update langsung setelah check-off</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Opsi catatan muncul setelah check-off (tidak wajib isi)</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Isi catatan → tersimpan (cek di API response)</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Skip catatan → tetap OK</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Tap check-off lagi pada habit yang sudah done → konfirmasi undo</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Undo → card kembali ke state belum done, streak recalculate</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Habit yang sudah di-delete tidak muncul</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Tombol "Tambah Habit" berfungsi → redirect ke form</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Bottom navigation aktif di tab "Today"<span class="sub">Highlight / warna berbeda pada tab aktif</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Pull-to-refresh atau scroll ke atas → data terbaru di-load</span></label>
+  <label class="item"><input type="checkbox"><span class="label">OFFLINE: buka halaman saat internet mati → halaman tetap tampil (dari cache)</span></label>
+</div>
+
+<!-- 3. Tambah/Edit Habit -->
+<div class="section" data-section="habit-form" id="sec-habit-form">
+  <div class="section-head">
+    <h2>✏️ Halaman Tambah / Edit Habit</h2>
+    <span class="badge purple">CRUD</span>
+    <span class="section-counter"></span>
+  </div>
+  <label class="item"><input type="checkbox"><span class="label">Form tambah habit muncul: nama, kategori, waktu notifikasi</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Nama wajib diisi — tidak bisa submit jika kosong<span class="sub">HTML validation atau JS validation</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Kategori opsional — bisa kosong<span class="sub">Default: "general"</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Waktu notifikasi opsional — time picker berfungsi<span class="sub">Format HH:MM, native time input</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Submit → habit baru muncul di halaman Today</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Edit habit → data lama ter-prefill di form<span class="sub">Nama, kategori, waktu notifikasi sudah terisi</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Update → perubahan tersimpan<span class="sub">Verifikasi data berubah di halaman Today</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Tombol hapus (di edit) → konfirmasi → habit hilang dari daftar<span class="sub">Dialog konfirmasi muncul sebelum delete</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Cancel/back → kembali tanpa perubahan</span></label>
+</div>
+
+<!-- 4. Laporan Mingguan -->
+<div class="section" data-section="report" id="sec-report">
+  <div class="section-head">
+    <h2>📊 Halaman Laporan Mingguan</h2>
+    <span class="badge yellow">Report</span>
+    <span class="section-counter"></span>
+  </div>
+  <label class="item"><input type="checkbox"><span class="label">Data laporan minggu terakhir muncul otomatis</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Overall completion rate ditampilkan benar<span class="sub">Persentase total check-off / total slot</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Per-habit breakdown muncul dengan progress bar</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Progress bar warna sesuai klasifikasi<span class="sub">Hijau ≥ 80%, Kuning 50-79%, Merah &lt; 50%</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Consistency Score per habit ditampilkan</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Pattern Insights muncul dalam card<span class="sub">Insight dari endpoint <code>/api/v1/reports/insights</code></span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Navigasi ke minggu sebelumnya → data berubah<span class="sub">Query param <code>?start=...&end=...</code></span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Navigasi ke minggu depan (jika ada) → data berubah</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Minggu tanpa data → tampilan kosong yang informatif (bukan error)<span class="sub">Pesan seperti "Belum ada aktivitas minggu ini"</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Bottom navigation aktif di tab "Report"</span></label>
+</div>
+
+<!-- 5. Settings -->
+<div class="section" data-section="settings" id="sec-settings">
+  <div class="section-head">
+    <h2>⚙️ Halaman Settings</h2>
+    <span class="badge">Settings</span>
+    <span class="section-counter"></span>
+  </div>
+  <label class="item"><input type="checkbox"><span class="label">Nama dan email user ditampilkan</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Toggle notifikasi push → muncul permission dialog browser<span class="sub">Pertama kali: browser minta izin</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Izinkan notifikasi → subscription tersimpan<span class="sub">POST <code>/api/v1/push/subscribe</code> berhasil</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Matikan notifikasi → subscription terhapus<span class="sub">DELETE <code>/api/v1/push/unsubscribe</code> berhasil</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Tombol logout → token terhapus, redirect ke login<span class="sub">localStorage dibersihkan</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Setelah logout, akses <code>/habits</code> → redirect ke login</span></label>
+</div>
+
+<!-- 6. PWA Specific -->
+<div class="section" data-section="pwa" id="sec-pwa">
+  <div class="section-head">
+    <h2>📲 PWA Specific</h2>
+    <span class="badge purple">PWA</span>
+    <span class="section-counter"></span>
+  </div>
+  <label class="item"><input type="checkbox"><span class="label">Chrome Android: muncul "Add to Home Screen" banner<span class="sub">Atau prompt install di address bar</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Install PWA → icon muncul di home screen HP</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Buka dari home screen → tampil fullscreen (tanpa address bar)<span class="sub">Cek <code>display: standalone</code> di manifest</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Splash screen muncul saat loading (warna dan icon sesuai manifest)</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Theme color browser sesuai (hijau emerald)<span class="sub">Meta tag <code>theme-color</code> dan manifest match</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">OFFLINE mode: buka app saat internet mati → halaman utama dari cache<span class="sub">Service Worker caching aktif</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">OFFLINE mode: coba check-off → tampil pesan "Kamu sedang offline"</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Internet kembali → data sync otomatis (atau prompt user)</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Safari iOS: bisa "Add to Home Screen" dari share menu</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Installed PWA → push notification masuk ke HP</span></label>
+</div>
+
+<!-- 7. Push Notification -->
+<div class="section" data-section="push" id="sec-push">
+  <div class="section-head">
+    <h2>🔔 Push Notification</h2>
+    <span class="badge red">Notif</span>
+    <span class="section-counter"></span>
+  </div>
+  <label class="item"><input type="checkbox"><span class="label">Notifikasi masuk sesuai waktu yang dikonfigurasi per habit</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Isi notifikasi benar: nama habit + streak saat ini</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Tap notifikasi → buka app di halaman habits</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Notifikasi TIDAK muncul jika habit sudah di-check-off hari ini</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Matikan notifikasi per habit → notifikasi berhenti untuk habit itu</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Matikan semua notifikasi di settings → semua berhenti</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Notifikasi masuk meskipun app tidak dibuka (background)</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Action button "Selesai" di notifikasi → check-off langsung<span class="sub">Jika diimplementasi — opsional</span></span></label>
+</div>
+
+<!-- 8. Responsive Design -->
+<div class="section" data-section="responsive" id="sec-responsive">
+  <div class="section-head">
+    <h2>📐 Responsive Design Check</h2>
+    <span class="badge yellow">UI</span>
+    <span class="section-counter"></span>
+  </div>
+  <label class="item"><input type="checkbox"><span class="label">HP kecil (320px width) → tidak ada elemen yang terpotong<span class="sub">Test di DevTools device emulator</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">HP normal (375px width) → layout proporsional</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Tablet (768px width) → layout menyesuaikan</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Desktop (1280px width) → layout menyesuaikan, tidak stretch berlebihan</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Landscape mode HP → tetap usable</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Font size readable di semua ukuran layar</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Tombol cukup besar untuk di-tap dengan jari (min 44×44px)<span class="sub">WCAG touch target guideline</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Tidak ada horizontal scroll yang tidak diinginkan</span></label>
+</div>
+
+<!-- 9. Performance -->
+<div class="section" data-section="perf" id="sec-perf">
+  <div class="section-head">
+    <h2>⚡ Performance Check</h2>
+    <span class="badge red">Perf</span>
+    <span class="section-counter"></span>
+  </div>
+  <label class="item"><input type="checkbox"><span class="label">Halaman utama load &lt; 2 detik (first paint)<span class="sub">Test di 3G throttle juga</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Check-off response &lt; 500ms (dari tap sampai visual update)</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Tidak ada memory leak (buka app 10 menit, RAM stabil)<span class="sub">Monitor di DevTools → Performance → Memory</span></span></label>
+  <label class="item"><input type="checkbox"><span class="label">Lighthouse PWA score &gt; 90</span></label>
+  <label class="item"><input type="checkbox"><span class="label">Lighthouse Performance score &gt; 80</span></label>
+</div>
+
+</main>
+
+<div style="max-width:860px;margin:0 auto;padding:0 16px">
+  <div class="actions">
+    <button class="btn btn-green" onclick="exportReport()">📥 Export Laporan</button>
+    <button class="btn btn-red" onclick="resetAll()">🗑️ Reset Semua</button>
+    <button class="btn btn-muted" onclick="collapseAll()">⬆️ Tutup Semua</button>
+    <button class="btn btn-muted" onclick="expandAll()">⬇️ Buka Semua</button>
+  </div>
+</div>
+
+<footer>
+  HabitFlow QA Checklist v1.0 &bull; Data tersimpan di localStorage browser ini
+</footer>
+
+<script>
+const STORAGE_KEY = 'habitflow-qa-checklist';
+
+// Build TOC
+(function buildTOC() {
+  const toc = document.getElementById('toc');
+  const sections = document.querySelectorAll('.section[data-section]');
+  sections.forEach(sec => {
+    const id = sec.id;
+    const title = sec.querySelector('h2').textContent.replace(/^[^\w\s]*\s*/, '');
+    const a = document.createElement('a');
+    a.href = '#' + id;
+    a.textContent = title;
+    a.dataset.target = id;
+    toc.appendChild(a);
+  });
+})();
+
+// Attach change listeners
+const boxes = document.querySelectorAll('.item input[type=checkbox]');
+boxes.forEach((box, i) => {
+  box.dataset.idx = i;
+  box.addEventListener('change', () => {
+    box.closest('.item').classList.toggle('checked', box.checked);
+    save();
+    updateStats();
+  });
+});
+
+function updateStats() {
+  const total = boxes.length;
+  let done = 0;
+  boxes.forEach(b => { if (b.checked) done++; });
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('doneCount').textContent = done;
+  document.getElementById('remainCount').textContent = total - done;
+  const pct = total ? Math.round(done / total * 100) : 0;
+  document.getElementById('pct').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+
+  // Per-section counters
+  document.querySelectorAll('.section[data-section]').forEach(sec => {
+    const cb = sec.querySelectorAll('input[type=checkbox]');
+    const checked = [...cb].filter(c => c.checked).length;
+    const counter = sec.querySelector('.section-counter');
+    if (counter) counter.textContent = checked + '/' + cb.length;
+  });
+}
+
+function save() {
+  const state = [];
+  boxes.forEach(b => state.push(b.checked));
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+}
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const state = JSON.parse(raw);
+    state.forEach((checked, i) => {
+      if (boxes[i]) {
+        boxes[i].checked = checked;
+        boxes[i].closest('.item').classList.toggle('checked', checked);
+      }
+    });
+  } catch (e) {}
+  updateStats();
+}
+
+function resetAll() {
+  if (!confirm('Reset semua checklist? Data progress akan hilang.')) return;
+  boxes.forEach(b => { b.checked = false; b.closest('.item').classList.remove('checked'); });
+  save();
+  updateStats();
+}
+
+function collapseAll() {
+  document.querySelectorAll('.section[data-section]').forEach(sec => {
+    const items = sec.querySelectorAll('.item');
+    items.forEach(it => it.style.display = 'none');
+    sec.dataset.collapsed = '1';
+  });
+}
+
+function expandAll() {
+  document.querySelectorAll('.section[data-section]').forEach(sec => {
+    const items = sec.querySelectorAll('.item');
+    items.forEach(it => it.style.display = '');
+    sec.dataset.collapsed = '';
+  });
+}
+
+// Toggle section collapse on heading click
+document.querySelectorAll('.section-head').forEach(head => {
+  head.style.cursor = 'pointer';
+  head.addEventListener('click', () => {
+    const sec = head.closest('.section');
+    if (!sec.dataset.section) return;
+    const items = sec.querySelectorAll('.item');
+    const collapsed = sec.dataset.collapsed === '1';
+    items.forEach(it => it.style.display = collapsed ? '' : 'none');
+    sec.dataset.collapsed = collapsed ? '' : '1';
+  });
+});
+
+function exportReport() {
+  const lines = ['# HabitFlow QA Checklist — Laporan', ''];
+  const now = new Date().toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' });
+  lines.push('Tanggal: ' + now, '');
+
+  const total = boxes.length;
+  let done = 0;
+  boxes.forEach(b => { if (b.checked) done++; });
+  lines.push('Progress: ' + done + '/' + total + ' (' + Math.round(done / total * 100) + '%)', '');
+
+  document.querySelectorAll('.section[data-section]').forEach(sec => {
+    const title = sec.querySelector('h2').textContent;
+    lines.push('## ' + title);
+    sec.querySelectorAll('.item').forEach(item => {
+      const cb = item.querySelector('input[type=checkbox]');
+      const label = item.querySelector('.label').childNodes[0].textContent.trim();
+      lines.push((cb.checked ? '[x] ' : '[ ] ') + label);
+    });
+    lines.push('');
+  });
+
+  const blob = new Blob([lines.join('\n')], { type: 'text/markdown' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'habitflow-qa-report-' + new Date().toISOString().slice(0, 10) + '.md';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// Highlight active TOC link on scroll
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('nav.toc a').forEach(a => a.classList.remove('active'));
+      const link = document.querySelector('nav.toc a[data-target="' + e.target.id + '"]');
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-120px 0px -60% 0px', threshold: 0 });
+document.querySelectorAll('.section[data-section]').forEach(sec => observer.observe(sec));
+
+load();
+</script>
+</body>
+</html>

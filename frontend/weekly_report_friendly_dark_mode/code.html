@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script content="tailwind.config = { darkMode: 'class', theme: { extend: { colors: { 'primary': '#2ec2b3', 'background-light': '#f5f7f8', 'background-dark': '#0f172a' }, fontFamily: { 'display': ['Inter'] }, borderRadius: { 'DEFAULT': '0.75rem', 'lg': '0.75rem', 'xl': '1rem', 'full': '9999px' } } } }" id="tailwind-config">tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2ec2b3",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#0a1114",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }</script>
+<title>HabitFlow - Laporan Mingguan</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-200 antialiased min-h-screen">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 backdrop-blur-md px-10 py-3 sticky top-0 z-50"><div class="flex items-center gap-8"><div class="flex items-center gap-4 text-primary"><div class="size-8"><span class="material-symbols-outlined text-4xl">data_check</span></div><h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight">HabitFlow</h2></div><div class="hidden md:flex items-center gap-9"><a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Dashboard</a><a class="text-primary text-sm font-bold border-b-2 border-primary py-1" href="#">Laporan</a><a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Habit</a><a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Pengaturan</a></div></div><div class="flex flex-1 justify-end gap-6 items-center"><label class="hidden lg:flex flex-col min-w-40 h-10 max-w-64"><div class="flex w-full flex-1 items-stretch rounded-xl h-full"><div class="text-slate-400 flex border-none bg-slate-100 dark:bg-slate-800/50 items-center justify-center pl-4 rounded-l-xl border-r-0"><span class="material-symbols-outlined text-xl">search</span></div><input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-xl text-slate-900 dark:text-white focus:outline-0 focus:ring-0 border-none bg-slate-100 dark:bg-slate-800/50 focus:border-none h-full placeholder:text-slate-500 px-4 pl-2 text-base font-normal" placeholder="Cari data..." value=""/></div></label><div class="flex gap-2"><button class="flex items-center justify-center rounded-xl h-10 w-10 bg-slate-100 dark:bg-slate-800/50 text-slate-900 dark:text-white hover:bg-primary hover:text-white transition-colors"><span class="material-symbols-outlined">notifications</span></button></div><div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary/50" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDRaQrwQzshKb_ryus3cWD5q6eXN2jHpy8K5skGxl0eoAUuNrdOHcIABhSFws_T4MqR7x-Mi3OhbtANYAKfA6iQXYWbLg4MzkSnheVZ_5PUfDaPuf9HBeOPfD0grUEzI7a-S03daoeAxiLa7-Jnk--1HZ_0ve7h4qf3S7WOn7X3UpV8ZI63msSmSQuCy5JRnI4vcRRXacb_XxO4V4cGklP6a204PXKNJcxPkjZ3W3kXpDrCaals80YeK9VNd4YJXG1QnWqcuRLIKSc");'></div></div></header>
+<main class="flex flex-1 flex-col px-4 md:px-10 lg:px-40 py-8">
+<!-- Page Header -->
+<div class="flex flex-wrap justify-between items-end gap-3 mb-8">
+<div class="flex flex-col gap-1">
+<h1 class="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-tight">Laporan Mingguan</h1>
+<p class="text-slate-500 dark:text-slate-400 text-lg font-normal">Periode: 2 - 8 Maret 2026</p>
+</div>
+<button class="flex min-w-[120px] cursor-pointer items-center justify-center gap-2 rounded-xl h-11 px-6 bg-primary text-slate-900 text-sm font-bold tracking-wide hover:opacity-90 transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-xl">download</span>
+<span>Unduh PDF</span>
+</button>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Left Column: Consistency and Completion -->
+<div class="lg:col-span-8 flex flex-col gap-6">
+<!-- Hero Section: Consistency Score -->
+<div class="bg-white dark:bg-slate-900 rounded-xl p-8 flex flex-col md:flex-row items-center gap-8 border border-slate-200 dark:border-slate-800 shadow-sm dark:bg-slate-900/50"><div class="relative flex items-center justify-center"><svg class="size-48 transform -rotate-90"><circle class="text-slate-100 dark:text-slate-800/50" cx="96" cy="96" fill="transparent" r="88" stroke="currentColor" stroke-width="12"></circle><circle class="text-primary" cx="96" cy="96" fill="transparent" r="88" stroke="currentColor" stroke-dasharray="552.92" stroke-dashoffset="99.52" stroke-width="12"></circle></svg><div class="absolute inset-0 flex flex-col items-center justify-center"><span class="text-5xl font-black text-slate-900 dark:text-white">82</span><span class="text-primary font-bold text-sm uppercase tracking-widest">Konsisten</span></div></div><div class="flex-1 text-center md:text-left"><h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Performa Luar Biasa!</h3><p class="text-slate-500 dark:text-slate-400 leading-relaxed mb-4">Kamu mempertahankan tingkat konsistensi di atas 80% minggu ini. Skor ini 5% lebih tinggi dibandingkan minggu lalu. Pertahankan ritme ini!</p><div class="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium"><span class="material-symbols-outlined text-lg">trending_up</span><span>+5% dari minggu lalu</span></div></div></div>
+<!-- Completion Rate per Habit -->
+<div class="bg-white dark:bg-slate-900/50 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Penyelesaian per Habit</h3>
+<div class="space-y-4">
+<div class="space-y-2">
+<div class="flex justify-between text-sm">
+<span class="font-medium">Minum Air 2L</span>
+<span class="text-primary font-bold">100%</span>
+</div>
+<div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 100%"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm">
+<span class="font-medium">Meditasi Pagi</span>
+<span class="text-primary font-bold">85%</span>
+</div>
+<div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 85%"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm">
+<span class="font-medium">Baca Buku</span>
+<span class="text-primary font-bold">70%</span>
+</div>
+<div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 70%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Streaks, Insights, Improvements -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<!-- Streak Highlight -->
+<div class="bg-gradient-to-br from-primary to-primary/60 rounded-xl p-6 text-slate-900 shadow-lg shadow-primary/20"><div class="flex flex-col items-center text-center"><span class="text-5xl mb-2">🔥</span><h4 class="text-lg font-medium opacity-90">Streak Terpanjang</h4><p class="text-4xl font-black mt-1">12 hari</p><p class="text-sm mt-4 bg-black/10 px-4 py-2 rounded-xl backdrop-blur-md border border-black/5">Habit: Meditasi Pagi</p></div></div>
+<!-- Insight Card -->
+<div class="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden dark:bg-slate-900/50">
+<div class="absolute top-0 right-0 p-2 opacity-10">
+<span class="material-symbols-outlined text-6xl">lightbulb</span>
+</div>
+<div class="flex items-start gap-4">
+<div class="bg-amber-100 dark:bg-amber-900/40 p-3 rounded-lg text-amber-600 dark:text-amber-400">
+<span class="material-symbols-outlined">lightbulb</span>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-slate-900 dark:text-white mb-1">Insight Minggu Ini</h4>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                                        Habit <span class="font-bold text-slate-900 dark:text-white">Olahraga</span> sering terlewat di akhir pekan. Coba jadwalkan di pagi hari sebelum aktivitas lain dimulai.
+                                    </p>
+</div>
+</div>
+</div>
+<!-- Improvement Card -->
+<div class="bg-white dark:bg-slate-900 rounded-xl p-6 border-l-4 border-red-500 shadow-sm dark:bg-slate-900/50">
+<div class="flex items-start gap-4">
+<div class="bg-red-100 dark:bg-red-900/40 p-3 rounded-lg text-red-600 dark:text-red-400">
+<span class="material-symbols-outlined">priority_high</span>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-slate-900 dark:text-white mb-1">Area Perbaikan</h4>
+<p class="text-sm text-slate-500 dark:text-slate-400 mb-3">Habit paling butuh perhatian:</p>
+<div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700">
+<span class="font-bold text-slate-900 dark:text-white">Olahraga</span>
+<span class="text-red-500 font-bold text-sm">50% (-15%)</span>
+</div>
+<p class="text-xs text-slate-400 mt-3 italic">
+                                        Tip: Kurangi durasi target dari 45 menit menjadi 15 menit agar lebih mudah dilakukan.
+                                    </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Weekly Grid Preview -->
+<div class="mt-8 bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm dark:bg-slate-900/50">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Ringkasan Harian</h3>
+<div class="grid grid-cols-7 gap-4">
+<div class="flex flex-col items-center gap-2">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Sen</span>
+<div class="size-8 rounded bg-primary"></div>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Sel</span>
+<div class="size-8 rounded bg-primary"></div>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Rab</span>
+<div class="size-8 rounded bg-primary"></div>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Kam</span>
+<div class="size-8 rounded bg-primary/40"></div>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Jum</span>
+<div class="size-8 rounded bg-primary"></div>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Sab</span>
+<div class="size-8 rounded bg-slate-200 dark:bg-slate-800"></div>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Min</span>
+<div class="size-8 rounded bg-primary/60"></div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Spacer -->
+<footer class="py-10 text-center text-slate-400 text-sm">
+<p>© 2026 HabitFlow Tracker. Dikembangkan untuk progresmu.</p>
+</footer>
+</div>
+</div>
+</body></html>
