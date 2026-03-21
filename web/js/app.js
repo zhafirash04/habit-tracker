@@ -1568,7 +1568,7 @@
             <div class="space-y-2.5 text-xs">
               <div class="hf-settings-row"><span class="text-slate-400">Versi</span><span class="text-slate-200 font-medium">HabitFlow v1.0</span></div>
               <div class="hf-settings-row"><span class="text-slate-400">Platform</span><span class="text-slate-200 font-medium">Web Progressive App</span></div>
-              <div class="hf-settings-row"><span class="text-slate-400">Proyek</span><span class="text-slate-200 font-medium">Skripsi S1 TI, UBSI</span></div>
+              <div class="hf-settings-row"><span class="text-slate-400">Proyek</span><span class="text-slate-200 font-medium">Eksperimen Personal</span></div>
             </div>
           </div>
         </div>
