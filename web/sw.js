@@ -1,4 +1,4 @@
-const CACHE_NAME = 'habitflow-v11';
+const CACHE_NAME = 'habitflow-v12';
 const API_CACHE = 'habitflow-api-v7';
 const ASSETS = [
   '/',
