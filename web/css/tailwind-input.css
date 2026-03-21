@@ -1,0 +1,24 @@
+@import "tailwindcss" source("../..");
+
+/*
+ * HabitFlow — Tailwind v4 CSS-first configuration.
+ * Replaces the previous CDN <script> + inline tailwind.config.
+ * Build command: npx @tailwindcss/cli -i web/css/tailwind-input.css -o web/css/tailwind.css --minify
+ */
+
+@source "../../web";
+
+@theme {
+  --color-primary: #2ec2b3;
+  --color-background-dark: #0b1215;
+
+  --font-display: "Inter", sans-serif;
+
+  --radius: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-full: 9999px;
+}
+
+@variant dark (&:where(.dark, .dark *));

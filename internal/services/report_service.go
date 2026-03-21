@@ -114,49 +114,66 @@ func (s *ReportService) GenerateWeeklyForPeriod(userID uint, startStr, endStr st
 		return nil, err
 	}
 
-	// Get streaks for all active habits
+	// Get streaks for all active habits in one batch query (N+1 fix)
+	// Before: N queries (1 per habit). After: 1 query.
 	var streaks []HabitStreakSummary
-	for _, habit := range habits {
-		var streak models.Streak
-		if err := s.DB.Where("habit_id = ?", habit.ID).First(&streak).Error; err == nil {
+	if len(activeIDs) > 0 {
+		var allStreaks []models.Streak
+		s.DB.Where("habit_id IN ?", activeIDs).Find(&allStreaks)
+
+		habitNameMap := make(map[uint]string, len(habits))
+		for _, h := range habits {
+			habitNameMap[h.ID] = h.Name
+		}
+
+		for _, st := range allStreaks {
 			streaks = append(streaks, HabitStreakSummary{
-				HabitID:       habit.ID,
-				HabitName:     habit.Name,
-				CurrentStreak: streak.CurrentStreak,
-				LongestStreak: streak.LongestStreak,
+				HabitID:       st.HabitID,
+				HabitName:     habitNameMap[st.HabitID],
+				CurrentStreak: st.CurrentStreak,
+				LongestStreak: st.LongestStreak,
 			})
 		}
 	}
 
-	// Build daily breakdown for the period
+	// Build daily breakdown for the period using pre-fetched data (N+1 fix).
+	// Before: 2 queries per day (habits + logs) = 2*D queries.
+	// After: 1 query for all logs in the period, then computed in memory.
 	var breakdown []DayBreakdown
+	var allLogs []models.HabitLog
+	if len(activeIDs) > 0 {
+		s.DB.Where("user_id = ? AND is_done = ? AND date >= ? AND date <= ? AND habit_id IN ?",
+			userID, true, startStr, endStr, activeIDs).
+			Find(&allLogs)
+	}
+
+	// Group logs by date for O(1) lookup
+	logsByDate := make(map[string]int)
+	for _, log := range allLogs {
+		logsByDate[log.Date]++
+	}
+
 	for d := startDate; !d.After(endDate); d = d.AddDate(0, 0, 1) {
 		ds := d.Format("2006-01-02")
 		dayEnd := time.Date(d.Year(), d.Month(), d.Day(), 23, 59, 59, 0, d.Location())
 
-		// Only count habits that existed on this specific day
-		var dayHabits []models.Habit
-		s.DB.Where("user_id = ? AND is_active = ? AND created_at <= ?", userID, true, dayEnd).Find(&dayHabits)
-		dayTotal := len(dayHabits)
-
-		var cnt int64
-		if dayTotal > 0 {
-			dayHabitIDs := make([]uint, len(dayHabits))
-			for i, h := range dayHabits {
-				dayHabitIDs[i] = h.ID
+		// Count habits that existed on this day (filter by CreatedAt in memory)
+		dayTotal := 0
+		for _, h := range habits {
+			if !h.CreatedAt.After(dayEnd) {
+				dayTotal++
 			}
-			s.DB.Model(&models.HabitLog{}).
-				Where("user_id = ? AND date = ? AND is_done = ? AND habit_id IN ?", userID, ds, true, dayHabitIDs).
-				Count(&cnt)
 		}
+
+		completed := logsByDate[ds]
 		rate := 0.0
 		if dayTotal > 0 {
-			rate = float64(cnt) / float64(dayTotal) * 100
+			rate = float64(completed) / float64(dayTotal) * 100
 		}
 		breakdown = append(breakdown, DayBreakdown{
 			Date:      ds,
 			DayName:   dayNamesID[d.Weekday()],
-			Completed: int(cnt),
+			Completed: completed,
 			Total:     dayTotal,
 			Rate:      rate,
 		})

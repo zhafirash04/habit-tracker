@@ -115,7 +115,15 @@ func (s *InsightService) findBestDay(userID uint, startDate, endDate string) (st
 	return dayNames[bestDay], nil
 }
 
+// habitLogCount is a helper struct for batch GROUP BY count queries.
+type habitLogCount struct {
+	HabitID uint
+	Count   int64
+}
+
 // findDeclining finds active habits with no check-in in the last 3 days of the period.
+// Uses a single GROUP BY query instead of per-habit count (N+1 fix).
+// Before: 1 + N queries. After: 2 queries total.
 func (s *InsightService) findDeclining(userID uint, endDate string) ([]models.Habit, error) {
 	end, err := time.Parse("2006-01-02", endDate)
 	if err != nil {
@@ -128,14 +136,32 @@ func (s *InsightService) findDeclining(userID uint, endDate string) ([]models.Ha
 		return nil, err
 	}
 
+	if len(habits) == 0 {
+		return nil, nil
+	}
+
+	// Batch-fetch check-in counts for all habits in one query (N+1 fix)
+	habitIDs := make([]uint, len(habits))
+	for i, h := range habits {
+		habitIDs[i] = h.ID
+	}
+	var counts []habitLogCount
+	s.DB.Model(&models.HabitLog{}).
+		Select("habit_id, COUNT(*) as count").
+		Where("habit_id IN ? AND is_done = ? AND date >= ? AND date <= ?", habitIDs, true, threeDaysAgo, endDate).
+		Group("habit_id").
+		Scan(&counts)
+
+	activeSet := make(map[uint]bool, len(counts))
+	for _, c := range counts {
+		if c.Count > 0 {
+			activeSet[c.HabitID] = true
+		}
+	}
+
 	var declining []models.Habit
 	for _, habit := range habits {
-		var count int64
-		s.DB.Model(&models.HabitLog{}).
-			Where("habit_id = ? AND is_done = ? AND date >= ? AND date <= ?", habit.ID, true, threeDaysAgo, endDate).
-			Count(&count)
-
-		if count == 0 {
+		if !activeSet[habit.ID] {
 			declining = append(declining, habit)
 		}
 	}
@@ -144,6 +170,8 @@ func (s *InsightService) findDeclining(userID uint, endDate string) ([]models.Ha
 }
 
 // findHighConsistency finds habits with >= 80% consistency within the period.
+// Uses a single GROUP BY query instead of per-habit count (N+1 fix).
+// Before: 1 + N queries. After: 2 queries total.
 func (s *InsightService) findHighConsistency(userID uint, startDate, endDate string) ([]string, error) {
 	start, _ := time.Parse("2006-01-02", startDate)
 	end, _ := time.Parse("2006-01-02", endDate)
@@ -158,15 +186,33 @@ func (s *InsightService) findHighConsistency(userID uint, startDate, endDate str
 		return nil, err
 	}
 
+	if len(habits) == 0 {
+		return nil, nil
+	}
+
+	// Batch-fetch done counts for all habits in one query (N+1 fix)
+	habitIDs := make([]uint, len(habits))
+	habitNames := make(map[uint]string, len(habits))
+	for i, h := range habits {
+		habitIDs[i] = h.ID
+		habitNames[h.ID] = h.Name
+	}
+	var counts []habitLogCount
+	s.DB.Model(&models.HabitLog{}).
+		Select("habit_id, COUNT(*) as count").
+		Where("habit_id IN ? AND is_done = ? AND date >= ? AND date <= ?",
+			habitIDs, true, startDate, endDate).
+		Group("habit_id").
+		Scan(&counts)
+
+	countMap := make(map[uint]int64, len(counts))
+	for _, c := range counts {
+		countMap[c.HabitID] = c.Count
+	}
+
 	var consistent []string
 	for _, habit := range habits {
-		var doneCount int64
-		s.DB.Model(&models.HabitLog{}).
-			Where("habit_id = ? AND is_done = ? AND date >= ? AND date <= ?",
-				habit.ID, true, startDate, endDate).
-			Count(&doneCount)
-
-		if doneCount >= int64(threshold) {
+		if countMap[habit.ID] >= int64(threshold) {
 			consistent = append(consistent, habit.Name)
 		}
 	}

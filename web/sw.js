@@ -1,12 +1,14 @@
-const CACHE_NAME = 'habitflow-v9';
+const CACHE_NAME = 'habitflow-v11';
 const API_CACHE = 'habitflow-api-v7';
 const ASSETS = [
   '/',
   '/index.html',
+  '/css/tailwind.css',
   '/css/app.css',
   '/js/api.js',
   '/js/icons.js',
   '/js/app.js',
+  '/js/sw-register.js',
   '/manifest.json',
   '/manifest.json?v=3',
   '/icons/favicon.svg',

@@ -24,8 +24,8 @@ func SecurityHeadersMiddleware(cfg *config.Config) gin.HandlerFunc {
 			"img-src 'self' data:",
 			"style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
 			"font-src 'self' https://fonts.gstatic.com",
-			"script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com",
-			"connect-src 'self'",
+			"script-src 'self'",
+			"connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com",
 			"worker-src 'self'",
 		}, "; ")
 		c.Header("Content-Security-Policy", csp)

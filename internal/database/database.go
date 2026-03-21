@@ -6,7 +6,7 @@ import (
 	"habitflow/internal/config"
 	"habitflow/internal/models"
 
-	"github.com/glebarez/sqlite"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
@@ -22,20 +22,12 @@ func Init(cfg *config.Config) {
 		logMode = logger.Warn
 	}
 
-	DB, err = gorm.Open(sqlite.Open(cfg.DatabaseURL), &gorm.Config{
+	DB, err = gorm.Open(postgres.Open(cfg.DatabaseURL), &gorm.Config{
 		Logger: logger.Default.LogMode(logMode),
 	})
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
-
-	// Enable WAL mode for better concurrent read performance
-	sqlDB, err := DB.DB()
-	if err != nil {
-		log.Fatalf("Failed to get underlying sql.DB: %v", err)
-	}
-	sqlDB.Exec("PRAGMA journal_mode=WAL;")
-	sqlDB.Exec("PRAGMA foreign_keys=ON;")
 
 	// AutoMigrate all models
 	err = DB.AutoMigrate(

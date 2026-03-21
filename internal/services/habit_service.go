@@ -123,6 +123,8 @@ func (s *HabitService) Create(userID uint, input CreateHabitInput) (*HabitRespon
 }
 
 // GetAll returns all active habits for a user, including streak data.
+// Uses a single batch-query for streaks to avoid N+1 problem.
+// Before: 1 + N queries (1 habits + N streaks). After: 2 queries total.
 func (s *HabitService) GetAll(userID uint) ([]HabitResponse, error) {
 	var habits []models.Habit
 	if err := s.DB.Where("user_id = ? AND is_active = ?", userID, true).
@@ -131,9 +133,36 @@ func (s *HabitService) GetAll(userID uint) ([]HabitResponse, error) {
 		return nil, errors.New("gagal mengambil daftar habit")
 	}
 
+	if len(habits) == 0 {
+		return []HabitResponse{}, nil
+	}
+
+	// Batch-fetch all streaks in one query instead of one per habit (N+1 fix)
+	habitIDs := make([]uint, len(habits))
+	for i, h := range habits {
+		habitIDs[i] = h.ID
+	}
+	var streaks []models.Streak
+	s.DB.Where("habit_id IN ?", habitIDs).Find(&streaks)
+
+	streakMap := make(map[uint]models.Streak, len(streaks))
+	for _, st := range streaks {
+		streakMap[st.HabitID] = st
+	}
+
 	responses := make([]HabitResponse, 0, len(habits))
 	for _, habit := range habits {
-		responses = append(responses, s.toResponse(habit))
+		st := streakMap[habit.ID] // zero-value if not found
+		responses = append(responses, HabitResponse{
+			ID:            habit.ID,
+			Name:          habit.Name,
+			Category:      habit.Category,
+			NotifyTime:    habit.NotifyTime,
+			IsActive:      habit.IsActive,
+			CurrentStreak: st.CurrentStreak,
+			LongestStreak: st.LongestStreak,
+			CreatedAt:     habit.CreatedAt,
+		})
 	}
 
 	return responses, nil

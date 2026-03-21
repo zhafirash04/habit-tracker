@@ -31,7 +31,7 @@ func Load() *Config {
 
 	return &Config{
 		Port:            getEnv("PORT", "8080"),
-		DatabaseURL:     getEnv("DATABASE_URL", "habitflow.db"),
+		DatabaseURL:     getEnv("DATABASE_URL", ""),
 		JWTSecret:       getEnv("JWT_SECRET", "default-secret-change-me"),
 		Environment:     strings.ToLower(getEnv("APP_ENV", "development")),
 		CORSOrigins:     parseOrigins(getEnv("CORS_ALLOWED_ORIGINS", "")),
@@ -43,6 +43,9 @@ func Load() *Config {
 }
 
 func (c *Config) Validate() error {
+	if c.DatabaseURL == "" {
+		return errors.New("DATABASE_URL wajib diisi")
+	}
 	if c.MaxBodyBytes < 1024 {
 		return errors.New("MAX_BODY_BYTES terlalu kecil")
 	}

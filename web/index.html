@@ -13,30 +13,7 @@
     <link rel="shortcut icon" href="/icons/favicon.svg?v=3" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icons/icon-192.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script>
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              "primary": "#2ec2b3",
-              "background-dark": "#0b1215",
-            },
-            fontFamily: {
-              "display": ["Inter", "sans-serif"]
-            },
-            borderRadius: {
-              "DEFAULT": "0.5rem",
-              "lg": "0.75rem",
-              "xl": "0.75rem",
-              "2xl": "1rem",
-              "full": "9999px"
-            },
-          }
-        }
-      }
-    </script>
+    <link rel="stylesheet" href="/css/tailwind.css">
     <link rel="stylesheet" href="/css/app.css">
 </head>
 <body class="bg-background-dark font-display text-slate-200 antialiased min-h-screen">
@@ -46,12 +23,6 @@
     <script src="/js/api.js"></script>
     <script src="/js/icons.js"></script>
     <script src="/js/app.js"></script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js')
-          .then(r => console.log('SW registered:', r.scope))
-          .catch(e => console.error('SW error:', e));
-      }
-    </script>
+    <script src="/js/sw-register.js"></script>
 </body>
 </html>

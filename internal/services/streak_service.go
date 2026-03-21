@@ -222,6 +222,8 @@ type TodayStatus struct {
 }
 
 // GetTodayStatus returns all active habits for a user with today's check-in status.
+// Uses batch queries for logs and streaks to avoid N+1 problem.
+// Before: 1 + 2N queries (1 habits + N logs + N streaks). After: 3 queries total.
 func (s *StreakService) GetTodayStatus(userID uint) ([]TodayStatus, error) {
 	today := TodayWIB()
 
@@ -232,8 +234,36 @@ func (s *StreakService) GetTodayStatus(userID uint) ([]TodayStatus, error) {
 		return nil, err
 	}
 
-	statuses := make([]TodayStatus, 0, len(habits))
+	if len(habits) == 0 {
+		return []TodayStatus{}, nil
+	}
 
+	// Collect habit IDs for batch queries
+	habitIDs := make([]uint, len(habits))
+	for i, h := range habits {
+		habitIDs[i] = h.ID
+	}
+
+	// Batch-fetch today's logs for all habits in one query (N+1 fix)
+	var logs []models.HabitLog
+	s.DB.Where("habit_id IN ? AND date = ? AND is_done = ?", habitIDs, today, true).Find(&logs)
+
+	logMap := make(map[uint]models.HabitLog, len(logs))
+	for _, log := range logs {
+		logMap[log.HabitID] = log
+	}
+
+	// Batch-fetch all streaks in one query (N+1 fix)
+	var streaks []models.Streak
+	s.DB.Where("habit_id IN ?", habitIDs).Find(&streaks)
+
+	streakMap := make(map[uint]models.Streak, len(streaks))
+	for _, st := range streaks {
+		streakMap[st.HabitID] = st
+	}
+
+	// Build statuses using pre-fetched maps — no more per-habit queries
+	statuses := make([]TodayStatus, 0, len(habits))
 	for _, habit := range habits {
 		status := TodayStatus{
 			HabitID:  habit.ID,
@@ -241,18 +271,13 @@ func (s *StreakService) GetTodayStatus(userID uint) ([]TodayStatus, error) {
 			Category: habit.Category,
 		}
 
-		// Check if done today
-		var log models.HabitLog
-		if err := s.DB.Where("habit_id = ? AND date = ? AND is_done = ?",
-			habit.ID, today, true).First(&log).Error; err == nil {
+		if log, ok := logMap[habit.ID]; ok {
 			status.IsDoneToday = true
 			status.Note = log.Note
 		}
 
-		// Get current streak
-		var streak models.Streak
-		if err := s.DB.Where("habit_id = ?", habit.ID).First(&streak).Error; err == nil {
-			status.CurrentStreak = streak.CurrentStreak
+		if st, ok := streakMap[habit.ID]; ok {
+			status.CurrentStreak = st.CurrentStreak
 		}
 
 		statuses = append(statuses, status)
