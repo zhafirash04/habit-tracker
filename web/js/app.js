@@ -523,9 +523,11 @@
     <div class="min-h-screen flex flex-col bg-background-dark">
       <header class="w-full border-b border-slate-800 bg-slate-900/80 backdrop-blur-sm fixed top-0 z-50">
         <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <div class="text-primary">${Icons.repeat(28, '#2ec2b3')}</div>
-            <h2 class="text-xl font-bold tracking-tight">HabitFlow</h2>
+          <div class="flex items-center gap-3">
+            <div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+              ${Icons.repeat(20, 'currentColor')}
+            </div>
+            <h2 class="text-xl font-bold tracking-tight text-primary">HabitFlow</h2>
           </div>
           <a href="#/login" class="inline-flex h-9 items-center justify-center rounded-lg bg-primary/10 px-4 text-sm font-bold text-primary hover:bg-primary/20 transition-colors">Masuk</a>
         </div>
@@ -607,8 +609,10 @@
     app().innerHTML = `
     <div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
       <header class="flex items-center justify-between px-6 py-6 lg:px-40">
-        <div class="flex items-center gap-2 text-primary">
-          ${Icons.layers(28, '#2ec2b3')}
+        <div class="flex items-center gap-3 text-primary">
+          <div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+            ${Icons.repeat(20, 'currentColor')}
+          </div>
           <h2 class="text-slate-100 text-xl font-bold leading-tight tracking-tight">HabitFlow</h2>
         </div>
         <a href="#/dashboard" class="text-slate-400 hover:text-primary transition-colors text-sm font-semibold">Lewati</a>
@@ -1354,7 +1358,9 @@
     const headerHTML = `
       <div class="flex items-center gap-8">
         <div class="flex items-center gap-3">
-          <div class="text-primary">${Icons.fileBarChart(28, '#2ec2b3')}</div>
+          <div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+            ${Icons.repeat(20, 'currentColor')}
+          </div>
           <h2 class="text-lg font-bold text-white">HabitFlow</h2>
         </div>
         <div class="hidden md:flex items-center gap-9">

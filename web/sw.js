@@ -114,7 +114,7 @@ self.addEventListener('notificationclick', function(event) {
           }
         }).then((resp) => {
           if (resp.ok) {
-            return self.registration.showNotification('HabitFlow ✅', {
+            return self.registration.showNotification('HabitFlow 🔁', {
               body: 'Habit berhasil dicheckin! 🔥',
               icon: '/icons/icon-192.png',
               badge: '/icons/badge-72.png',
