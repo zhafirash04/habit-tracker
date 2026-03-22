@@ -22,6 +22,13 @@ HabitFlow adalah Progressive Web App untuk tracking kebiasaan harian. Dibuat kar
 - Feedback yang jelas lewat streak & consistency score
 - Notifikasi yang bisa dikustomisasi per habit, bukan generik
 
+## Demo App
+
+Coba langsung tanpa registrasi menggunakan akun demo:
+- **URL**: [https://habit-tracker-production-3749.up.railway.app/](https://habit-tracker-production-3749.up.railway.app/)
+- **Email**: `demo@habitflow.app`
+- **Password**: `demo1234`
+
 ## Fitur
 
 | Fitur | Deskripsi |
