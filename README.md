@@ -29,6 +29,8 @@ Coba langsung tanpa registrasi menggunakan akun demo:
 - **Email**: `demo@habitflow.app`
 - **Password**: `demo1234`
 
+⚠️ **Catatan**: Ini adalah akun demo bersama untuk keperluan showcase. Data dapat diubah oleh siapa saja. Akun ini akan di-reset secara berkala.
+
 ## Fitur
 
 | Fitur | Deskripsi |
