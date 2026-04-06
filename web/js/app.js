@@ -463,9 +463,24 @@
           <h1 class="text-2xl font-bold tracking-tight text-white">HabitFlow</h1>
         </div>
         <div class="w-full rounded-2xl bg-slate-900/50 backdrop-blur-sm p-8 shadow-xl border border-slate-800/50">
-          <div class="mb-8">
+          <div class="mb-6">
             <h2 class="text-2xl font-bold leading-tight text-white">Masuk ke HabitFlow</h2>
             <p class="mt-2 text-slate-400">Silakan masukkan detail akun Anda</p>
+          </div>
+          <div class="mb-6 rounded-xl bg-primary/10 border border-primary/20 p-4">
+            <h3 class="text-sm font-semibold text-primary mb-2">Akun Demo</h3>
+            <p class="text-xs text-slate-300 mb-3">Coba langsung aplikasi tanpa registrasi:</p>
+            <div class="space-y-1.5 text-xs font-mono">
+              <div class="flex items-center gap-2">
+                <span class="text-slate-400 w-20">Email</span>
+                <span class="text-slate-200">demo@habitflow.app</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-slate-400 w-20">Password</span>
+                <span class="text-slate-200">demo1234</span>
+              </div>
+            </div>
+            <p class="text-[10px] text-slate-400 mt-3 leading-relaxed">⚠️ Ini adalah akun demo bersama. Data dapat diubah oleh siapa saja dan akan di-reset secara berkala.</p>
           </div>
           <form id="auth-form" class="space-y-5">
             <div class="flex flex-col gap-2">
