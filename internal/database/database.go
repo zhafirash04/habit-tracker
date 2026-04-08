@@ -43,4 +43,7 @@ func Init(cfg *config.Config) {
 	}
 
 	log.Println("Database connected and migrated successfully")
+
+	// Seed the demo account
+	SeedDemoAccount()
 }
